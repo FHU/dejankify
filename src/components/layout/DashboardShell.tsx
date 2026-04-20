@@ -34,8 +34,14 @@ function ShellInner({
 
   // Close mobile sidebar on navigation
   useEffect(() => {
-    setMobileSidebarOpen(false);
-  }, [pathname]);
+    if (!mobileSidebarOpen) return;
+
+    const frame = requestAnimationFrame(() => {
+      setMobileSidebarOpen(false);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [mobileSidebarOpen, pathname]);
 
   const refreshSessions = useCallback(async () => {
     try {
